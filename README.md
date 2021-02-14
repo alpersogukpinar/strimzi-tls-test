@@ -53,18 +53,17 @@ kubectl port-forward my-cluster-kafka-0 9093:9093 -n kafka
 127.0.0.1 my-cluster-kafka-1.my-cluster-kafka-brokers.kafka.svc
 127.0.0.1 my-cluster-kafka-2.my-cluster-kafka-brokers.kafka.svc
 ```
-12. Read secrets from kubernetes and save crt and key for .net code
+12.Read ca-cert with the following command and save it to **ca-root.crt** file
 ```
 kubectl get secret my-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' -n kafka
 ```
->.Based64 decode ca.crt from preceding comment output and write it to **ca-root.crt**
+13. Read my-user secret, Base64 decode user.crt data and save it to **localhost_client.crt** file.
+Also, decode and save user.key data to **localhost_client.key** file
 ```
 kubectl get secret my-user -o yaml -n kafka
 ```
->.Base64 decode user.crt data and save it to **localhost_client.crt**
-Base64 decode user.key data and save it to **localhost_client.key**
 
-13. Run .net console application publish message by writing to commandline somenthing and check consumer application logs with below commands
+14. Run .net console application publish message by writing to commandline somenthing and check consumer application logs with below commands
 ```
 kubectl port-forward my-cluster-kafka-0 9093:9093 -n kafka
 kubectl get pods -n kafka
