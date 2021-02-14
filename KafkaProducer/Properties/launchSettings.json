@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "KafkaProducer": {
+      "commandName": "Project",
+      "commandLineArgs": "my-topic"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+save ca-root.crt, localhost_client.crt, localhost_client.key into this directory
