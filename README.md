@@ -57,8 +57,8 @@ kubectl port-forward my-cluster-kafka-0 9093:9093 -n kafka
 ```
 kubectl get secret my-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' -n kafka
 ```
-13. Read my-user secret, Base64 decode user.crt data and save it to **localhost_client.crt** file.
-Also, decode and save user.key data to **localhost_client.key** file
+13. Read my-user secret, Base64 decode **user.crt** data and save it to **localhost_client.crt** file.
+Also, decode and save **user.key** data to **localhost_client.key** file
 ```
 kubectl get secret my-user -o yaml -n kafka
 ```
