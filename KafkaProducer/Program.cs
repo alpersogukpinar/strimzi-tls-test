@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-using Confluent.Kafka.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,47 +7,42 @@ namespace KafkaConsumer
 {
     class Program
     {
-        static void Main(string[] args)
+        static async System.Threading.Tasks.Task Main(string[] args)
         {
             string topicName = args[0];
 
-            var config = new Dictionary<string, object>
+
+            var config = new ProducerConfig
             {
-                { "bootstrap.servers", "localhost:9093" },
-                { "security.protocol", "SSL" },
-                { "ssl.ca.location", @"D:\Development\Repos\KafkaProducer\KafkaProducer\tmpca-root.crt" },
-                { "debug", "security" }
+                //EnableSslCertificateVerification = false,
+                BootstrapServers = "bootstrap.myingress.com:443",
+                SecurityProtocol = SecurityProtocol.Ssl,
+                SslCaLocation = "./tmp/ca-root.crt",
+                SslCertificateLocation = "./tmp/localhost_client.crt",
+                SslKeyLocation = "./tmp/localhost_client.key",
+                //Debug = "broker",
             };
 
-            var mutualAuthConfig = new Dictionary<string, object>
-            {
-                { "bootstrap.servers", "localhost:9093" },
-                { "security.protocol", "SSL" },
-                { "ssl.ca.location", @"D:\Development\Repos\KafkaProducer\KafkaProducer\tmp\ca-root.crt" },
-                { "ssl.certificate.location", @"D:\Development\Repos\KafkaProducer\KafkaProducer\tmp\localhost_client.crt" },
-                { "ssl.key.location", @"D:\Development\Repos\KafkaProducer\KafkaProducer\tmp\localhost_client.key" },
-                { "debug", "security" }
-            };
-
-            using (var producer = new Producer<Null, string>(mutualAuthConfig, null, new StringSerializer(Encoding.UTF8)))
+            using (var producer = new ProducerBuilder<Null, string>(config).Build())
             {
                 Console.WriteLine($"{producer.Name} producing on {topicName}. q to exit.");
-
-                producer.OnError += (_, error)
-                    => Console.WriteLine($"Error: {error}");
 
                 string text;
                 while ((text = Console.ReadLine()) != "q")
                 {
-                    var deliveryReport = producer.ProduceAsync(topicName, null, text);
-                    deliveryReport.ContinueWith(task =>
+                    try
                     {
-                        Console.WriteLine($"Partition: {task.Result.Partition}, Offset: {task.Result.Offset}");
-                    });
+                        var dr = await producer.ProduceAsync(topicName, new Message<Null, string> { Value = text });
+                        Console.WriteLine($"Delivered '{dr.Value}' to '{dr.TopicPartitionOffset}'");
+                    }
+                    catch (ProduceException<Null, string> e)
+                    {
+                        Console.WriteLine($"Delivery failed: {e.Error.Reason}");
+                    }
                 }
 
-                
-                producer.Flush(TimeSpan.FromSeconds(10));
+
+                //producer.Flush(TimeSpan.FromSeconds(10));
             }
         }
     }

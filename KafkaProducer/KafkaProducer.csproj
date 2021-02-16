@@ -6,11 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Confluent.Kafka\Confluent.Kafka.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="tmp\" />
+    <PackageReference Include="Confluent.Kafka" Version="1.5.3" />
   </ItemGroup>
 
   <ItemGroup>
