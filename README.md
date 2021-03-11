@@ -69,3 +69,5 @@ kubectl port-forward my-cluster-kafka-0 9093:9093 -n kafka
 kubectl get pods -n kafka
 kubectl logs <consumer-pod-name> -f -n kafka
 ```
+15. Set --enable-ssl-passthrough flag to true
+    https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough
