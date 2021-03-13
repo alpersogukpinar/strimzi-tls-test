@@ -1,0 +1,10 @@
+lenses:
+  kafka:
+    bootstrapServers:
+      - name: my-cluster-kafka-bootstrap
+        port: 9092
+        sslPort: 9093
+        saslSslPort: 9094
+        saslPlainTextPort: 9095
+  # licenseUrl is a url pointing to the Lenses license
+  licenseUrl: "url"
