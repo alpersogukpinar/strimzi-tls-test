@@ -18,8 +18,8 @@ namespace KafkaConsumer
                 BootstrapServers = "bootstrap.myingress.com:443",
                 SecurityProtocol = SecurityProtocol.Ssl,
                 SslCaLocation = "./tmp/ca-root.crt",
-                SslCertificateLocation = "./tmp/localhost_client.crt",
-                SslKeyLocation = "./tmp/localhost_client.key",
+                SslCertificateLocation = "./tmp/user.crt",
+                SslKeyLocation = "./tmp/user.key",
                 //Debug = "broker",
             };
 

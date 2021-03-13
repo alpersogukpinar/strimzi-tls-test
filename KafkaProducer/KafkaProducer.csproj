@@ -13,10 +13,10 @@
     <None Update="tmp\ca-root.crt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="tmp\localhost_client.crt">
+    <None Update="tmp\user.crt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="tmp\localhost_client.key">
+    <None Update="tmp\user.key">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
