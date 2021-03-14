@@ -1,7 +1,8 @@
 
 # Install Kubernetes Cluster
-Kind will be installed for Kuberntes
+Install Kubernetes Kind cluster
 ```
+cd ./kind
 kind create cluster --config ./kind.yaml
 ```
 # Ingress Installation for Kind 
@@ -9,7 +10,8 @@ Ingress required, ingress installation for kind Ingress NGINX - [Kind](https://k
 ```
 kubectl apply -f 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml'
 ```
-Set --enable-ssl-passthrough flag to true [SSL Passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough) <br>
+Set **--enable-ssl-passthrough** flag to **true** <br>
+Check the [SSL Passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough) link for details<br>
 ![image](./SSLPassthrough.png)
 
 # Strimzi Installation
@@ -22,9 +24,9 @@ kubectl create namespace kafka
 ```
 kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
 ```
-3. Goto  strimzi directy  and create kafka cluster
+3. Goto  strimzi directory  and create kafka cluster  (for single node installation use kafka-single.yaml)
 ```
-cd .\strimzi
+cd ../strimzi
 kubectl apply -f kafka.yaml -n kafka
 kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
 ```
@@ -42,11 +44,11 @@ kubectl apply -f user.yaml -n kafka
 kubectl get secret my-user -n kafka
 kubectl get secret my-user -o yaml -n kafka
 ```
-7. Create a kafka topic
+7. Create a kafka topic (FOR TESTING)
 ```
 kubectl apply -f topic.yaml -n kafka
 ```
-8. Create producer and consumer
+8. Create producer and consumer (FOR TESTING)
 ```
 kubectl apply -f hello-world.yaml -n kafka
 kubectl get pods -n kafka
@@ -91,39 +93,38 @@ Documentation : <br>
 Deployment Steps:
 1. Create keystore file 
 ```
+cd ../lenses.io
 kubectl get secret my-user -n kafka -o jsonpath='{.data.user\.crt}' | base64 --decode > user.crt
 kubectl get secret my-user -n kafka -o jsonpath='{.data.user\.key}' | base64 --decode > user.key
 openssl pkcs12 -export -inkey user.key -in user.crt -out kafka-client.keystore.p12 -name kafka-key
-keytool -importkeystore -destkeystore kafka-client.keystore.jks -deststorepass 123456 -srckeystore kafka.keystore.p12 -srcstoretype PKCS12 -srcstorepass 123456 
+---> !!!! Don't forget to change password 123456 with the value you used at previous commands !!!!
+keytool -importkeystore -destkeystore kafka-client.keystore.jks -deststorepass 123456 -srckeystore kafka-client.keystore.p12 -srcstoretype PKCS12 -srcstorepass 123456 
 ```
 2. base64 encode kafka-client.keystore.jks file and set **keyStoreFileData** in lenses.tls.yaml
 ```
-openssl base64 < kafka-client.keystore.jks | tr -d '\n'
+openssl base64 < kafka-client.keystore.jks | tr -d '\n' > keyStoreFileData.txt
 ```
 3. Create Truststore file 
 ```
 kubectl get secret my-cluster-cluster-ca-cert -n kafka -o jsonpath='{.data.ca\.password}' | base64 --decode > ca.password
 kubectl get secret my-cluster-cluster-ca-cert -n kafka -o jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt
-keytool -importcert -alias KafkaCA -file ca.crt -keystore kafka-client.truststore.jks -keypass xQrcEAFtYe2z
+keytool -importcert -alias KafkaCA -file ca.crt -keystore kafka-client.truststore.jks -keypass <write password in ca.password file>
 ```
 4. base64 encode kafka-client.truststore.jks file and set **trustStoreFileData** in lenses.tls.yaml
 ```
-openssl base64 < kafka-client.truststore.jks | tr -d '\n'
+openssl base64 < kafka-client.truststore.jks | tr -d '\n' > trustStoreFileData.txt
 ```
-5. base64 encode keyPassword, keyStorePassword, trustStorePassword
+1. Update related fields at lenses.tls.yaml with the generated keyStoreFileData.txt, trustStoreFileData.txt, password used while truststore generations and lenses license url before running preceding commands
 ```
-echo "$password" | tr -d '\n' | base64
-```
-6. install lenses helm chart
-```
-helm install lenses lensesio/lenses -f lenses.tls.yaml -n kafka
+kubectl create namespace lenses
+helm repo add lensesio https://helm.repo.lenses.io
+helm repo update
+helm install lenses lensesio/lenses -f lenses.tls.yaml -n lenses
+kubectl port-forward <lenses-pod-name> -n lenses 3030:3030
 ``` 
-=======
-1.  Set --enable-ssl-passthrough flag to true
-    https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough
 
 
-
+<!-- 
 kubectl get secret my-cluster-cluster-ca-cert -n kafka -o jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt
 kubectl get secret my-user -n kafka -o jsonpath='{.data.user\.password}' | base64 -d > user.password
 kubectl get secret my-user -n kafka  -o jsonpath='{.data.user\.p12}' | base64 -d > user.p12
@@ -133,4 +134,4 @@ keytool -keystore user-truststore.jks -alias CARoot -import -file ca.crt
 openssl base64 < user-truststore.jks | tr -d '\n'
 
 keytool -importkeystore -srckeystore user.p12 -srcstoretype pkcs12 -destkeystore user-keystore.jks -deststoretype jks
-openssl base64 < user-keystore.jks | tr -d '\n'
+openssl base64 < user-keystore.jks | tr -d '\n' -->
