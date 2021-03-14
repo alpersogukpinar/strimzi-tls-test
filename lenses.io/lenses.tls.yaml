@@ -1,3 +1,10 @@
+ingress:
+  enabled: true
+  host: lenses.myingress.com
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /
 lenses:
   kafka:
     ssl:
@@ -9,6 +16,19 @@ lenses:
         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
       keyStorePassword: 123456
       keyPassword: 123456
+    sasl:
+        enabled: false
+        # keyTabData is the base64 encoded contents kerberos keytab file is using kerberos mounted in /mnt/secrets
+        keyTabData: |-
+
+        # jaasFileData is the contents of the kafka jaas file mounted in /mnt/secrets
+        jaasFileData: |-
+
+        # mechanism is the sasl authentication mechanism GSSAPI, SCRAM or PLAIN
+        mechanism: "GSSAPI"
+        # krb5Conf is the Kerberos config data to be mounted into /etc
+        krb5Conf: |-
+
     bootstrapServers:
       - name: my-cluster-kafka-bootstrap.kafka.svc.cluster.local
         port: 9093

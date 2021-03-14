@@ -35,9 +35,9 @@ kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
 kubectl get kafka -n kafka
 kubectl get kafka -o yaml -n kafka
 ```
-5. Create user resource 
+1. Create user resource, it will be an admin user, and will be fully authorized.
 ```
-kubectl apply -f user.yaml -n kafka
+kubectl apply -f user_full.yaml -n kafka
 ```
 6. Check secret
 ```
@@ -114,7 +114,7 @@ keytool -importcert -alias KafkaCA -file ca.crt -keystore kafka-client.truststor
 ```
 openssl base64 < kafka-client.truststore.jks | tr -d '\n' > trustStoreFileData.txt
 ```
-1. Update related fields at **lenses.tls.yaml** with the generated keyStoreFileData.txt, trustStoreFileData.txt, password used while truststore generations and lenses license url before running preceding commands
+5. Update related fields at **lenses.tls.yaml** with the generated keyStoreFileData.txt, trustStoreFileData.txt, password used while truststore generations and lenses license url before running preceding commands
 ```
 kubectl create namespace lenses
 helm repo add lensesio https://helm.repo.lenses.io
@@ -122,6 +122,7 @@ helm repo update
 helm install lenses lensesio/lenses -f lenses.tls.yaml -n lenses
 kubectl port-forward <lenses-pod-name> -n lenses 3030:3030
 ``` 
+1. Go to http://localhost/  to use lenses. Default username/password is admin/admin
 
 
 <!-- 
