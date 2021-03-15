@@ -89,6 +89,10 @@ kubectl logs <consumer-pod-name> -f -n kafka
 Documentation : <br>
 - [Docker](https://docs.lenses.io/4.1/installation/docker/) <br>
 - [Docker Quick Tour](https://docs.lenses.io/2.3/quick-tour/docker.html) <br>
+- [Installation on Kubernetes with Helm charts](https://docs.lenses.io/4.1/installation/kubernetes/) <br>
+- [Helm Chart Options](https://docs.lenses.io/4.1/configuration/options/helm/)
+- [Lenses Helm Charts on Github](https://github.com/lensesio/lenses-helm-charts)<br>
+<br>
 
 Deployment Steps:
 1. Create keystore file 
