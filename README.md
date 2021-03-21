@@ -126,7 +126,7 @@ helm repo update
 helm install lenses lensesio/lenses -f lenses.tls.yaml -n lenses
 kubectl port-forward <lenses-pod-name> -n lenses 3030:3030
 ``` 
-1. Go to http://localhost/  to use lenses. Default username/password is admin/admin
+6. Go to http://localhost/  to use lenses. Default username/password is admin/admin
 
 
 <!-- 
