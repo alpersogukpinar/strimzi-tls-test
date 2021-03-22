@@ -50,19 +50,6 @@ spec:
         configMapKeyRef:
           name: kafka-metrics
           key: kafka-metrics-config.yml
-  jmxTrans:
-    outputDefinitions:
-      - outputType: "com.googlecode.jmxtrans.model.output.StdOutWriter"
-        name: "standardOut"
-      - outputType: "com.googlecode.jmxtrans.model.output.GraphiteOutputWriter"
-        host: "mylogstash.com"
-        port: 31028
-        flushDelayInSeconds: 5
-        name: "logstash"
-    kafkaQueries:
-      - targetMBean: "kafka.server:type=BrokerTopicMetrics,name=*"
-        attributes:  ["Count"]
-        outputs: ["standardOut"]
   zookeeper:
     replicas: 3
     storage:
@@ -78,6 +65,9 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
+  kafkaExporter:
+    topicRegex: ".*"
+    groupRegex: ".*"
 ---
 kind: ConfigMap
 apiVersion: v1
