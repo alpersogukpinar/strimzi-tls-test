@@ -86,7 +86,7 @@ kubectl logs <consumer-pod-name> -f -n kafka
 ```
 
 
-# Strimzi Metrics configuration
+# Strimzi Kafka Metrics configuration
 Documentation : <br>
 - [Introducing Metrics to Kafka](https://strimzi.io/docs/operators/master/deploying.html#assembly-metrics-str) <br>
 <br>
