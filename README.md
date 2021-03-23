@@ -93,7 +93,7 @@ Documentation : <br>
 
 Deployment Steps:
 1. update *../kafka.yaml* file for metric configuration. Check *Strimzi-Kafka-Operator/examples/metrics/kafka-metrics.yaml* for the configuration
-2. Create prometheus operator. Before running preceding commands Update **namespace: monitoring** in the yaml file with your own namespace name and use that name for the following commands
+2. Create prometheus operator. Before running preceding commands Update *namespace: monitoring* in the yaml file with your own namespace name and use that name for the following commands
 ```
 cd ./metrics
 kubectl create namespace monitoring
