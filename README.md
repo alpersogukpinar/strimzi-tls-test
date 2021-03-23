@@ -99,12 +99,12 @@ cd ./metrics
 kubectl create namespace monitoring
 kubectl apply -f ./01-prometheus-operator-deployment/
 ```
-3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the prometheus-additional.yaml file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the prometheus.yaml file to include the name of the Secret and the prometheus-additional.yaml file.
+3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the *prometheus-additional.yaml* file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the *prometheus.yaml* file to include the name of the Secret and the prometheus-additional.yaml file.
 ```
 kubectl apply -f ./02-prometheus-additional-properties/ -n monitoring
 ```
-4. Update **namespace: monitoring** in prometheus.yaml file with the namespace you created for prometheus.
-   Update **namespaceSelector:** value which is **kafka** currently in 01-strimzi-pod-monitor.yaml with your strimzi cluster namespace.
+4. Update **namespace: monitoring** in *prometheus.yaml* file with the namespace you created for prometheus.
+   Update **namespaceSelector:** value which is **kafka** currently in *01-strimzi-pod-monitor.yaml* with your strimzi cluster namespace.
 ```
 kubectl apply -f ./03-prometheus-install/ -n monitoring
 ```
@@ -116,7 +116,7 @@ kubectl apply -f ./04-prometheus-alertmanager-config/ -n monitoring
 ```
 kubectl apply -f ./05-grafana-install/ -n monitoring
 ```
-7. Configure Grafana, add Promethues as a Datasource to Grafana and import grafana dashbords in 06-grafana-dashboards directory
+7. Configure Grafana, add Promethues as a Datasource to Grafana and import grafana dashbords in *06-grafana-dashboards* directory
 ```
 kubectl port-forward svc/grafana -n monitoring 3000:3000
 kubectl port-forward svc/prometheus-operated  -n monitoring 9090:9090
@@ -152,7 +152,7 @@ kubectl get secret my-cluster-cluster-ca-cert -n kafka -o jsonpath='{.data.ca\.p
 kubectl get secret my-cluster-cluster-ca-cert -n kafka -o jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt
 keytool -importcert -alias KafkaCA -file ca.crt -keystore kafka-client.truststore.jks -keypass <write password in ca.password file>
 ```
-4. base64 encode kafka-client.truststore.jks file and set **trustStoreFileData** in lenses.tls.yaml
+4. base64 encode *kafka-client.truststore.jks* file and set *trustStoreFileData* in *lenses.tls.yaml*
 ```
 openssl base64 < kafka-client.truststore.jks | tr -d '\n' > trustStoreFileData.txt
 ```
@@ -164,7 +164,7 @@ helm repo update
 helm install lenses lensesio/lenses -f lenses.tls.yaml -n lenses
 kubectl port-forward <lenses-pod-name> -n lenses 3030:3030
 ``` 
-6. Go to http://localhost/  to use lenses. Default username/password is admin/admin
+6. Go to http://localhost/  to use lenses. Default *username/password* is *admin/admin*
 
 
 <!-- 
