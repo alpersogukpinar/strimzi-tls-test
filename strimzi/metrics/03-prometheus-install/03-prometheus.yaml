@@ -43,7 +43,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: prometheus-server
-    namespace: kafka
+    namespace: monitoring
 
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -58,6 +58,7 @@ spec:
   podMonitorSelector:
     matchLabels:
       app: strimzi
+  serviceMonitorSelector: {}
   resources:
     requests:
       memory: 400Mi
@@ -68,7 +69,7 @@ spec:
       app: strimzi
   alerting:
     alertmanagers:
-    - namespace: kafka
+    - namespace: monitoring
       name: alertmanager
       port: alertmanager
   additionalScrapeConfigs:
