@@ -92,8 +92,8 @@ Documentation : <br>
 <br>
 
 Deployment Steps:
-1. update *../kafka.yaml* file for metric configuration. Check *Strimzi-Kafka-Operator/examples/metrics/kafka-metrics.yaml* for the configuration
-2. Create prometheus operator. Before running preceding commands Update *namespace: monitoring* in the *prometheus-operator-deployment.yaml* file with your own namespace name and use that name for the following commands
+1. update *../kafka.yaml* file for metric configuration if it doesn't have metric related configuration and recreate your strimzi kafka cluster. <br> Check *Strimzi-Kafka-Operator/examples/metrics/kafka-metrics.yaml* for metric settings.
+2. Create prometheus operator. Before running preceding commands Update *namespace: monitoring* in the *prometheus-operator-deployment.yaml* file with your own namespace name and use that namespace for the following commands
 ```
 cd ./metrics
 kubectl create namespace monitoring
@@ -103,7 +103,7 @@ kubectl apply -f ./01-prometheus-operator-deployment/
 ```
 kubectl apply -f ./02-prometheus-additional-properties/ -n monitoring
 ```
-4. Update **namespace: monitoring** in *prometheus.yaml* file with the namespace you created for the prometheus installation.
+4. Update *namespace: monitoring* in *prometheus.yaml* file with the namespace you created for the prometheus installation.
    Update *namespaceSelector: ...* value which is set to *kafka* in current *01-strimzi-pod-monitor.yaml* with your strimzi cluster namespace.
 ```
 kubectl apply -f ./03-prometheus-install/ -n monitoring
