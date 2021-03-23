@@ -22,7 +22,7 @@ kubectl create namespace kafka
 ```
 2. Create strimzi operator
 ```
-kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
 ```
 3. Goto  strimzi directory  and create kafka cluster  (for single node installation use kafka-single.yaml)
 ```
@@ -85,6 +85,44 @@ kubectl get pods -n kafka
 kubectl logs <consumer-pod-name> -f -n kafka
 ```
 
+
+# Strimzi Metrics configuration
+Documentation : <br>
+- [Introducing Metrics to Kafka](https://strimzi.io/docs/operators/master/deploying.html#assembly-metrics-str) <br>
+<br>
+
+Deployment Steps:
+1. update *../kafka.yaml* file for metric configuration. Check *Strimzi-Kafka-Operator/examples/metrics/kafka-metrics.yaml* for the configuration
+2. Create prometheus operator. Before running preceding commands Update **namespace: monitoring** in the yaml file with your own namespace name and use that name for the following commands
+```
+cd ./metrics
+kubectl create namespace monitoring
+kubectl apply -f ./01-prometheus-operator-deployment/
+```
+3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the prometheus-additional.yaml file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the prometheus.yaml file to include the name of the Secret and the prometheus-additional.yaml file.
+```
+kubectl apply -f ./02-prometheus-additional-properties/ -n monitoring
+```
+4. Update **namespace: monitoring** in prometheus.yaml file with the namespace you created for prometheus.
+   Update **namespaceSelector:** value which is **kafka** currently in 01-strimzi-pod-monitor.yaml with your strimzi cluster namespace.
+```
+kubectl apply -f ./03-prometheus-install/ -n monitoring
+```
+5. Setting up [Prometheus Alert Manager](https://strimzi.io/docs/operators/master/deploying.html#assembly-metrics-prometheus-alertmanager-str)
+```
+kubectl apply -f ./04-prometheus-alertmanager-config/ -n monitoring
+```
+6. Create grafana service
+```
+kubectl apply -f ./05-grafana-install/ -n monitoring
+```
+7. Configure Grafana, add Promethues as a Datasource to Grafana and import grafana dashbords in 06-grafana-dashboards directory
+```
+kubectl port-forward svc/grafana -n monitoring 3000:3000
+kubectl port-forward svc/prometheus-operated  -n monitoring 9090:9090
+```
+
+
 # Lenses.io configuration for the Kafka Cluster
 Documentation : <br>
 - [Docker](https://docs.lenses.io/4.1/installation/docker/) <br>
@@ -140,3 +178,4 @@ openssl base64 < user-truststore.jks | tr -d '\n'
 
 keytool -importkeystore -srckeystore user.p12 -srcstoretype pkcs12 -destkeystore user-keystore.jks -deststoretype jks
 openssl base64 < user-keystore.jks | tr -d '\n' -->
+

@@ -36,4 +36,4 @@ lenses:
         saslSslPort: 9094
         saslPlainTextPort: 9095
   # licenseUrl is a url pointing to the Lenses license
-  licenseUrl: "https://licenses.lenses.io/download/lensesdl?id=<CHANGE IT WITH YOUR ID>"
+  licenseUrl: "https://licenses.lenses.io/download/lensesdl?id=d5504c9b-8308-11eb-9025-42010af01003"
