@@ -93,22 +93,22 @@ Documentation : <br>
 
 Deployment Steps:
 1. update *../kafka.yaml* file for metric configuration. Check *Strimzi-Kafka-Operator/examples/metrics/kafka-metrics.yaml* for the configuration
-2. Create prometheus operator. Before running preceding commands Update *namespace: monitoring* in the yaml file with your own namespace name and use that name for the following commands
+2. Create prometheus operator. Before running preceding commands Update *namespace: monitoring* in the *prometheus-operator-deployment.yaml* file with your own namespace name and use that name for the following commands
 ```
 cd ./metrics
 kubectl create namespace monitoring
 kubectl apply -f ./01-prometheus-operator-deployment/
 ```
-3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the *prometheus-additional.yaml* file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the *prometheus.yaml* file to include the name of the Secret and the prometheus-additional.yaml file.
+3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the *prometheus-additional.yaml* file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the *prometheus.yaml* file to include the name of the Secret and the *prometheus-additional.yaml* file. You don't need any changes in the *prometheus.yaml* if you keep default naming in the *kafka.yaml*
 ```
 kubectl apply -f ./02-prometheus-additional-properties/ -n monitoring
 ```
-4. Update **namespace: monitoring** in *prometheus.yaml* file with the namespace you created for prometheus.
-   Update **namespaceSelector:** value which is **kafka** currently in *01-strimzi-pod-monitor.yaml* with your strimzi cluster namespace.
+4. Update **namespace: monitoring** in *prometheus.yaml* file with the namespace you created for the prometheus installation.
+   Update *namespaceSelector: ...* value which is set to *kafka* in current *01-strimzi-pod-monitor.yaml* with your strimzi cluster namespace.
 ```
 kubectl apply -f ./03-prometheus-install/ -n monitoring
 ```
-5. Setting up [Prometheus Alert Manager](https://strimzi.io/docs/operators/master/deploying.html#assembly-metrics-prometheus-alertmanager-str)
+1. Setting up [Prometheus Alert Manager](https://strimzi.io/docs/operators/master/deploying.html#assembly-metrics-prometheus-alertmanager-str)
 ```
 kubectl apply -f ./04-prometheus-alertmanager-config/ -n monitoring
 ```
