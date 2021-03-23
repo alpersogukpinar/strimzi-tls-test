@@ -68,6 +68,10 @@ kubectl port-forward my-cluster-kafka-0 9093:9093 -n kafka
 127.0.0.1 my-cluster-kafka-0.my-cluster-kafka-brokers.kafka.svc
 127.0.0.1 my-cluster-kafka-1.my-cluster-kafka-brokers.kafka.svc
 127.0.0.1 my-cluster-kafka-2.my-cluster-kafka-brokers.kafka.svc
+127.0.0.1 bootsrap.myingress.com
+127.0.0.1 broker-0.myingress.com
+127.0.0.1 broker-1.myingress.com
+127.0.0.1 broker-2.myingress.com
 ```
 12.Read ca-cert with the following command, base64 decode and write it to **ca-root.crt** file
 ```
@@ -99,7 +103,7 @@ cd ./metrics
 kubectl create namespace monitoring
 kubectl apply -f ./01-prometheus-operator-deployment/
 ```
-3. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the *prometheus-additional.yaml* file contains the additional configuration needed. Edit the additionalScrapeConfigs property in the *prometheus.yaml* file to include the name of the Secret and the *prometheus-additional.yaml* file. You don't need any changes in the *prometheus.yaml* if you keep default naming in the *kafka.yaml*
+1. The Prometheus Operator does not have a monitoring resource like PodMonitor for scraping the nodes, so the *prometheus-additional.yaml* file contains the additional configuration needed.
 ```
 kubectl apply -f ./02-prometheus-additional-properties/ -n monitoring
 ```
